@@ -1,8 +1,8 @@
 {
     "version": 2,
-    "buildCommand": "sh build.sh",
+    "buildCommand": "composer install --no-dev --optimize-autoloader && npm install && npm run build && php artisan migrate:fresh --seed --force",
     "outputDirectory": "public",
-    "framework": null,
+    "framework": "laravel",
     "functions": {
         "api/index.php": {
             "runtime": "vercel-php@0.7.1"
@@ -18,7 +18,7 @@
             "dest": "public/build/$1"
         },
         {
-            "src": "/(.*\\.(png|jpg|jpeg|gif|svg|ico|webp))",
+            "src": "/(.*\\.(png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot))",
             "dest": "public/$1"
         },
         {
@@ -28,9 +28,8 @@
     ],
     "env": {
         "APP_ENV": "production",
-        "APP_DEBUG": "true",
-        "APP_URL": "https://yourapp.vercel.app",
-        "VERCEL_DEMO_MODE": "true",
+        "APP_DEBUG": "false",
+        "APP_URL": "https://portofolio-cv.vercel.app",
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",
         "APP_PACKAGES_CACHE": "/tmp/packages.php",
@@ -40,6 +39,7 @@
         "CACHE_DRIVER": "array",
         "LOG_CHANNEL": "stderr",
         "SESSION_DRIVER": "cookie",
-        "DB_CONNECTION": "sqlite"
+        "DB_CONNECTION": "sqlite",
+        "FILESYSTEM_DISK": "public"
     }
 }
