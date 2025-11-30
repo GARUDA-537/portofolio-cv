@@ -231,30 +231,98 @@
                 </div>
             @endif
 
-            <form action="{{ route('contact.send') }}" method="POST">
+            <form action="{{ route('contact.send') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
                     <label class="form-label">Nama Lengkap</label>
                     <input type="text" name="name" class="form-control" placeholder="Masukkan nama Anda" required value="{{ old('name') }}">
+                    @error('name')
+                        <span style="color: #dc3545; font-size: 0.9rem; margin-top: 0.3rem; display: block;">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Email</label>
                     <input type="email" name="email" class="form-control" placeholder="nama@email.com" required value="{{ old('email') }}">
+                    @error('email')
+                        <span style="color: #dc3545; font-size: 0.9rem; margin-top: 0.3rem; display: block;">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Subjek</label>
                     <input type="text" name="subject" class="form-control" placeholder="Tujuan pesan" required value="{{ old('subject') }}">
+                    @error('subject')
+                        <span style="color: #dc3545; font-size: 0.9rem; margin-top: 0.3rem; display: block;">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Pesan</label>
                     <textarea name="message" class="form-control" placeholder="Tuliskan pesan Anda di sini..." required>{{ old('message') }}</textarea>
+                    @error('message')
+                        <span style="color: #dc3545; font-size: 0.9rem; margin-top: 0.3rem; display: block;">{{ $message }}</span>
+                    @enderror
                 </div>
 
-                <button type="submit" class="submit-btn">Kirim Pesan</button>
+                <div class="form-group">
+                    <label class="form-label">📎 Lampiran (Opsional)</label>
+                    <div style="position: relative; border: 2px dashed #667eea; border-radius: 10px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.3s ease;" id="dropZone">
+                        <input type="file" name="attachment" id="fileInput" style="display: none;" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xls,.xlsx,.txt,.zip" onchange="updateFileName()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="2" style="margin: 0 auto 10px;">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p style="margin: 0; color: #667eea; font-weight: 600;">Klik atau seret file di sini</p>
+                        <p style="margin: 0.5rem 0 0; color: #999; font-size: 0.9rem;">Format: PDF, DOC, DOCX, JPG, PNG, XLS, XLSX, TXT, ZIP (Maks 10MB)</p>
+                        <p id="fileName" style="margin-top: 1rem; color: #28a745; font-size: 0.95rem; display: none;"></p>
+                    </div>
+                    @error('attachment')
+                        <span style="color: #dc3545; font-size: 0.9rem; margin-top: 0.3rem; display: block;">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <button type="submit" class="submit-btn">📤 Kirim Pesan</button>
             </form>
+
+            <script>
+                const dropZone = document.getElementById('dropZone');
+                const fileInput = document.getElementById('fileInput');
+                const fileName = document.getElementById('fileName');
+
+                dropZone.addEventListener('click', () => fileInput.click());
+
+                dropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropZone.style.background = '#f0f4ff';
+                    dropZone.style.borderColor = '#764ba2';
+                });
+
+                dropZone.addEventListener('dragleave', () => {
+                    dropZone.style.background = 'transparent';
+                    dropZone.style.borderColor = '#667eea';
+                });
+
+                dropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropZone.style.background = 'transparent';
+                    dropZone.style.borderColor = '#667eea';
+                    fileInput.files = e.dataTransfer.files;
+                    updateFileName();
+                });
+
+                function updateFileName() {
+                    if (fileInput.files && fileInput.files[0]) {
+                        const file = fileInput.files[0];
+                        const size = (file.size / 1024 / 1024).toFixed(2);
+                        fileName.textContent = `✓ File dipilih: ${file.name} (${size} MB)`;
+                        fileName.style.display = 'block';
+                    } else {
+                        fileName.style.display = 'none';
+                    }
+                }
+            </script>
             
             <div style="margin-top: 1.5rem; padding: 1rem; background: #f0f4ff; border-radius: 10px; text-align: center; border-left: 4px solid #667eea;">
                 <p style="margin: 0; font-size: 0.9rem; color: #666;">

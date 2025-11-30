@@ -11,3 +11,4 @@ Route::get('/pendidikan', [PortfolioController::class, 'education'])->name('educ
 Route::get('/sertifikasi', [PortfolioController::class, 'certificates'])->name('certificates');
 Route::get('/kontak', [PortfolioController::class, 'contact'])->name('contact');
 Route::post('/kontak', [PortfolioController::class, 'sendMessage'])->name('contact.send');
+Route::get('/kontak/download/{contactId}', [PortfolioController::class, 'downloadAttachment'])->name('contact.download-attachment');

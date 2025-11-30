@@ -3,13 +3,12 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ContactMail extends Mailable
+class ContactAutoReplyMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -29,9 +28,16 @@ class ContactMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Pesan Baru: ' . $this->data['subject'],
+            subject: 'Terima kasih! Pesan Anda telah diterima - ' . $this->data['subject'],
+            from: new \Illuminate\Mail\Mailables\Address(
+                config('mail.from.address'),
+                config('mail.from.name')
+            ),
             replyTo: [
-                new \Illuminate\Mail\Mailables\Address($this->data['email'], $this->data['name']),
+                new \Illuminate\Mail\Mailables\Address(
+                    config('mail.from.address'),
+                    config('mail.from.name')
+                ),
             ],
         );
     }
@@ -42,7 +48,7 @@ class ContactMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.contact',
+            view: 'emails.contact-auto-reply',
         );
     }
 
@@ -53,14 +59,6 @@ class ContactMail extends Mailable
      */
     public function attachments(): array
     {
-        $attachments = [];
-
-        if (isset($this->data['attachment_path']) && \Illuminate\Support\Facades\Storage::exists($this->data['attachment_path'])) {
-            $attachments[] = \Illuminate\Mail\Mailables\Attachment::fromPath(
-                \Illuminate\Support\Facades\Storage::path($this->data['attachment_path'])
-            )->as($this->data['attachment_original_name'] ?? 'attachment');
-        }
-
-        return $attachments;
+        return [];
     }
 }

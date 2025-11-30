@@ -10,6 +10,7 @@ npm run build
 # Create necessary directories
 mkdir -p storage/framework/{sessions,views,cache}
 mkdir -p storage/logs
+mkdir -p storage/app/public/contact-attachments
 mkdir -p bootstrap/cache
 mkdir -p database
 
@@ -21,3 +22,9 @@ php artisan migrate:fresh --seed --force
 
 # Set permissions
 chmod -R 775 storage bootstrap/cache database
+
+# Create symlink for public storage if not exists
+if [ ! -L "public/storage" ]; then
+    php artisan storage:link
+fi
+
