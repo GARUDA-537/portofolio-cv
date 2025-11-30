@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "buildCommand": "bash build.sh",
+    "buildCommand": "sh build.sh",
     "outputDirectory": "public",
     "framework": null,
     "functions": {
