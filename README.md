@@ -2,9 +2,17 @@
 
 [![Laravel](https://img.shields.io/badge/Laravel-11-red.svg)](https://laravel.com)
 [![PHP](https://img.shields.io/badge/PHP-8.2+-blue.svg)](https://php.net)
+[![Vercel](https://img.shields.io/badge/Deploy-Vercel-black.svg)](https://vercel.com)
 [![License](https://img.shields.io/badge/License-Personal-green.svg)](LICENSE)
 
 > Website portofolio profesional dengan fitur bilingual (Indonesia/English), formulir kontak terintegrasi email, dan desain responsif modern.
+
+## 🚀 Live Demo
+
+**Repository:** [github.com/GARUDA-537/portofolio-cv](https://github.com/GARUDA-537/portofolio-cv)
+
+**Deployment:** Ready for Vercel! See [DEPLOY_INSTRUCTIONS.md](DEPLOY_INSTRUCTIONS.md)
+
 
 ![Preview](public/images/network-simulation.png)
 
@@ -50,7 +58,7 @@ MySQL/MariaDB
 
 1. **Clone repository**
 ```bash
-git clone https://github.com/yourusername/portofolio-cv.git
+git clone https://github.com/GARUDA-537/portofolio-cv.git
 cd portofolio-cv
 ```
 
