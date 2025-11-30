@@ -1,5 +1,8 @@
 <?php
 
+// Register the Composer autoloader...
+require __DIR__ . '/../vendor/autoload.php';
+
 // Forward Vercel requests to Laravel
 $app = require __DIR__ . '/../bootstrap/app.php';
 
