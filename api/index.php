@@ -10,12 +10,22 @@ $app = require __DIR__ . '/../bootstrap/app.php';
 if (isset($_ENV['VERCEL'])) {
     $app->useStoragePath('/tmp/storage');
 
-    if (!is_dir('/tmp/storage')) {
-        mkdir('/tmp/storage', 0777, true);
-        mkdir('/tmp/storage/framework/views', 0777, true);
-        mkdir('/tmp/storage/framework/cache', 0777, true);
-        mkdir('/tmp/storage/framework/sessions', 0777, true);
+    if (!is_dir('/tmp/storage/logs')) {
         mkdir('/tmp/storage/logs', 0777, true);
+    }
+
+    // Copy database to /tmp if it doesn't exist
+    $dbPath = __DIR__ . '/../database/database.sqlite';
+    $tmpDbPath = '/tmp/database.sqlite';
+    
+    if (file_exists($dbPath) && !file_exists($tmpDbPath)) {
+        copy($dbPath, $tmpDbPath);
+    }
+    
+    // Point Laravel to the /tmp database
+    if (file_exists($tmpDbPath)) {
+        $_ENV['DB_DATABASE'] = $tmpDbPath;
+        putenv("DB_DATABASE={$tmpDbPath}");
     }
 }
 
