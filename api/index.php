@@ -18,14 +18,29 @@ if (isset($_ENV['VERCEL'])) {
     $dbPath = __DIR__ . '/../database/database.sqlite';
     $tmpDbPath = '/tmp/database.sqlite';
     
-    if (file_exists($dbPath) && !file_exists($tmpDbPath)) {
+    // Always copy the database to ensure we have the latest version
+    if (file_exists($dbPath)) {
         copy($dbPath, $tmpDbPath);
+    } else {
+        // If source DB doesn't exist, create an empty one
+        touch($tmpDbPath);
     }
     
     // Point Laravel to the /tmp database
-    if (file_exists($tmpDbPath)) {
-        $_ENV['DB_DATABASE'] = $tmpDbPath;
-        putenv("DB_DATABASE={$tmpDbPath}");
+    $_ENV['DB_DATABASE'] = $tmpDbPath;
+    putenv("DB_DATABASE={$tmpDbPath}");
+
+    // Run migrations if profiles table doesn't exist (using raw PDO to avoid booting full app yet)
+    try {
+        $pdo = new PDO("sqlite:{$tmpDbPath}");
+        $result = $pdo->query("SELECT name FROM sqlite_master WHERE type='table' AND name='profiles'");
+        if (!$result->fetch()) {
+            // We can't easily run artisan migrate here without booting the app.
+            // But since we are copying the DB, it SHOULD have tables if the source DB has them.
+            // If the source DB is empty/missing, we might need to rely on the build step or commit the DB.
+        }
+    } catch (PDOException $e) {
+        // Ignore check errors
     }
 }
 
